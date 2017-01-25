@@ -1,7 +1,7 @@
 ---
 
 - name: Configure the instance
-  hosts: vm
+  hosts: ec2
   remote_user: ubuntu
   gather_facts: False
   sudo: true
@@ -40,8 +40,6 @@
   
     - name: Install linux image
       apt: name=linux-image-extra-{{ uname.stdout }} state=present
-
-    ### Reboot the machine 
     
     - name: Update the machine
       apt: update_cache=yes
