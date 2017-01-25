@@ -1,0 +1,63 @@
+---
+  - name: Provision an EC2 Instance
+    hosts: localhost
+    connection: local
+    gather_facts: False
+    tags: provisioning
+    # Necessary Variables for creating/provisioning the EC2 Instance
+    vars:
+      instance_type: r4.xlarge
+      security_group: cakesolution # Change the security group name here
+      image: ami-30d3a65f # This is an AMI i created myself
+      keypair: elk-book-stack # This is one of my keys that i already have in AWS
+      region: ap-south-1 # Change the Region
+      count: 1
+
+    # Task that will be used to Launch/Create an EC2 Instance
+    tasks:
+
+      - name: Create a security group
+        ec2_group:
+          name: "{{ security_group }}"
+          description: Security Group for webserver Servers
+          region: "{{ region }}"
+          rules:
+            - proto: tcp
+              from_port: 22
+              to_port: 22
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 80
+              to_port: 80
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 443
+              to_port: 443
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 5601
+              to_port: 5601
+              cidr_ip: 0.0.0.0/0
+            - proto: tcp
+              from_port: 8081
+              to_port: 8081
+              cidr_ip: 0.0.0.0/0
+          rules_egress:
+            - proto: all
+              cidr_ip: 0.0.0.0/0
+        register: basic_firewall
+
+      - name: Launch the new EC2 Instance
+        ec2: 
+           group: "{{ security_group }}" 
+           instance_type: "{{ instance_type}}" 
+           image: "{{ image }}"  
+           region: "{{ region }}" 
+           keypair: "{{ keypair }}"
+           instance_tags:
+              Name: elk-wordpress
+           exact_count: 1
+           count_tag:
+              Name: elk-wordpress
+           wait: true
+        register: ec2
