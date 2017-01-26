@@ -7,6 +7,10 @@
 
   tasks:
 
+    - name: change the default memory for the VM
+      sudo: yes
+      command: sysctl -w vm.max_map_count=262144
+
     - name: Copy elk-stack configuration
       copy: src=./docker/elk-stack  dest=/home/ubuntu/
 
