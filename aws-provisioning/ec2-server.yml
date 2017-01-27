@@ -6,12 +6,15 @@
     tags: provisioning
     # Necessary Variables for creating/provisioning the EC2 Instance
     vars:
-      instance_type: r4.xlarge
+      ec2_instances:
+      instance_type: t2.medium
       security_group: cakesolution # Change the security group name here
       image: ami-30d3a65f # This is an AMI i created myself
       keypair: elk-book-stack # This is one of my keys that i already have in AWS
       region: ap-south-1 # Change the Region
       count: 1
+      public_dns_name: 
+      
 
     # Task that will be used to Launch/Create an EC2 Instance
     tasks:
@@ -61,3 +64,29 @@
               Name: elk-wordpress
            wait: true
         register: ec2
+        with_items: ec2_instances
+ 
+      - name: Gather EC2 facts.
+        ec2_remote_facts:
+          region: "{{ region }}"
+        register: ec2_facts
+
+      - name: Debug
+        debug:
+          msg: "{{ ec2 }}"
+
+      - name: Add new instances to host group
+        add_host:
+          name: "{{ item.public_dns_name }}"
+          groups: "{{ name }}"
+          ec2_id: "{{ item.id }}"
+        with_items: ec2_instances
+
+      - name: Wait for instance to boot
+        wait_for:
+          host: "{{ item.public_dns_name }}"
+          port: 22
+          delay: 30
+          timeout: 300
+          state: started
+        with_items: ec2_instances
