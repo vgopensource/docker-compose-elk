@@ -14,6 +14,9 @@
     - name: Copy elk-stack configuration
       copy: src=./docker/elk-stack  dest=/home/ubuntu/
 
+    - wait_for:
+        delay: 20
+
     - name: Build elk docker images using compose 
       command: docker-compose -f ~/elk-stack/elk-stack.yml build
 
