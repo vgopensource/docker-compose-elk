@@ -8,15 +8,14 @@
   tasks:
 
     - name: change the default memory for the VM
-      sudo: yes
-      command: sysctl -w vm.max_map_count=262144
+      command: sudo sysctl -w vm.max_map_count=262144
 
     - name: Copy elk-stack configuration
       copy: src=./docker/elk-stack  dest=/home/ubuntu/
 
-    - name: Build elk docker images using compose 
-      command: docker-compose -f ~/elk-stack/elk-stack.yml build
+    - name: Build elk docker images
+      command: sudo docker-compose -f "~/elk-stack/elk-stack.yml" build
 
     - name: Start docker container elk services
-      command: docker-compose -f ~/elk-stack/elk-stack.yml up -d
+      command: sudo docker-compose -f "~/elk-stack/elk-stack.yml" up -d
 

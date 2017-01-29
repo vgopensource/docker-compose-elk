@@ -16,6 +16,7 @@
       with_items:
         - apt-transport-https
         - ca-certificates
+        - apt-utils
 
     - name: Add the gpg key
       command: sudo apt-key adv --keyserver hkp://p80.pool.sks-keyservers.net:80 --recv-keys 58118E89F3A912897C070ADBF76221572C52609D
@@ -58,3 +59,12 @@
 
     - name: Make docker-compose executable
       shell: chmod +x /usr/local/bin/docker-compose
+
+    - name: Change the DOCKER_OPTS in /etc/default/docker file 
+      lineinfile: dest=/etc/default/docker regexp='^DOCKER_OPTS=' line='DOCKER_OPTS="-H tcp://127.0.0.1:4243 -H unix:///var/run/docker.sock"'
+
+    - name: Restart the docker service
+      service: name=docker state=restarted
+
+    - name: set the DOCKER_HOST
+      shell: export DOCKER_HOST=tcp://localhost:4243

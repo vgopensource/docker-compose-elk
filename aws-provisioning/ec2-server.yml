@@ -1,20 +1,19 @@
 ---
   - name: Provision an EC2 Instance
-    hosts: localhost
+    hosts: all
     connection: local
     gather_facts: False
     tags: provisioning
-    # Necessary Variables for creating/provisioning the EC2 Instance
+
+ # Necessary Variables for creating/provisioning the EC2 Instance
     vars:
-      ec2_instances:
       instance_type: t2.medium
-      security_group: cakesolution # Change the security group name here
-      image: ami-30d3a65f # This is an AMI i created myself
-      keypair: elk-book-stack # This is one of my keys that i already have in AWS
-      region: ap-south-1 # Change the Region
-      count: 1
-      public_dns_name: 
-      
+      security_group: cakesolution
+      image: ami-30d3a65f
+      keypair: elk-book-stack
+      region: ap-south-1
+      subnet_id: subnet-b79229de
+      count: 1 
 
     # Task that will be used to Launch/Create an EC2 Instance
     tasks:
@@ -55,7 +54,9 @@
            group: "{{ security_group }}" 
            instance_type: "{{ instance_type}}" 
            image: "{{ image }}"  
-           region: "{{ region }}" 
+           region: "{{ region }}"
+           vpc_subnet_id: "{{ subnet_id }}"
+           assign_public_ip: yes 
            keypair: "{{ keypair }}"
            instance_tags:
               Name: elk-wordpress
@@ -64,29 +65,20 @@
               Name: elk-wordpress
            wait: true
         register: ec2
-        with_items: ec2_instances
- 
-      - name: Gather EC2 facts.
-        ec2_remote_facts:
-          region: "{{ region }}"
-        register: ec2_facts
+  
+      - name: Add new instance to host group
+        lineinfile:
+          destfile: "/opt/cakesln/docker-compose-elk/hosts"
+          regexp: '^[ec2] '
+          insertafter: EOF
+          line: "{{ item.public_ip }}"     
+        with_items: "{{ ec2.instances }}"
 
-      - name: Debug
-        debug:
-          msg: "{{ ec2 }}"
-
-      - name: Add new instances to host group
-        add_host:
-          name: "{{ item.public_dns_name }}"
-          groups: "{{ name }}"
-          ec2_id: "{{ item.id }}"
-        with_items: ec2_instances
-
-      - name: Wait for instance to boot
+      - name: Wait for SSH to come up
         wait_for:
           host: "{{ item.public_dns_name }}"
           port: 22
-          delay: 30
-          timeout: 300
+          delay: 60
+          timeout: 320
           state: started
-        with_items: ec2_instances
+        with_items: "{{ ec2.instances }}"
