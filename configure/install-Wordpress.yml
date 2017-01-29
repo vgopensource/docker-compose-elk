@@ -12,14 +12,14 @@
       copy: src=./docker/application dest=/home/ubuntu/
 
     - name: fecth logstash IP Address from container
-      command: docker inspect --format \{\{.NetworkSettings.IPAddress\}\} logstash
+      command: sudo docker inspect --format \{\{.NetworkSettings.IPAddress\}\} logstash
       register: logstash_ip
 
     - name: Update ip address in wordpress file to map the syslog to logstash
       lineinfile: 'dest=/home/ubuntu/application/wordpress.yml regexp="^   syslog-address"   line="   syslog-address: \"tcp://{{ logstash_ip.stdout }}:25826\""'
 
     - name: Build Wordpresss Applicaton docker images
-      command: docker-compose -f ~/application/wordpress.yml build
+      command: sudo docker-compose -f ~/application/wordpress.yml build
 
     - name: Start dokcer container application services
-      command: docker-compose -f ~/application/wordpress.yml up -d
+      command: sudo docker-compose -f ~/application/wordpress.yml up -d

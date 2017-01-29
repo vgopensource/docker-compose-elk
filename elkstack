@@ -3,7 +3,6 @@
 # provision AWS EC2 machine using Ubuntu AMI
 
 ssh-add ~/.ssh/elk-book-stack.pem
-ssh-add -L
 
 ansible-playbook -i hosts aws-provisioning/ec2-server.yml
 
