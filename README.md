@@ -1,4 +1,4 @@
-# docker-compose-elk
+# docker-compose-elk setup 
 
 Docker Compose Based ELK setup for Centralized logging of Applications
 
@@ -21,9 +21,8 @@ Setup Requirements
 
 Pre-requisites :
 
-Ansible control machine with boto library installed for using the AWS environment.
-
-Setup the ACCESS_KEY and SCERET_KEY for aws iam user as a environment variable.
+Ansible control machine with python boto library installed for using the AWS environment.
+Setup the ACCESS_KEY and SCERET_KEY for aws iam user as a "environment variable".
 
 export AWS_ACCESS_KEY=' '
 export AWS_SECRET_KEY_ID=' '
@@ -43,9 +42,9 @@ Usage :
 
 By default, the stack exposes the following ports:
 
-5000: Logstash TCP input.
-9200: Elasticsearch HTTP
-9300: Elasticsearch TCP transport
-5601: Kibana
-
-
+- 5000: Logstash TCP input.
+- 9200: Elasticsearch HTTP
+- 9300: Elasticsearch TCP transport
+- 5601: Kibana
+- 8081: Wordpress Port
+- 3306: MySQL Port
