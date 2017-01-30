@@ -76,9 +76,9 @@ New plugins can be added to the logstash configuration for the additional logs
  Note : For Elasticsearch to successfully start the docker host memory set to be minimum 21644 , by default it's too less.
        In the configuration this has been corrected already so no manual intervention should be required.
 
-## Health status of the cluster
-# Elasticsearch cluster health is indicated in three parameters:
+#  Health status of the cluster
+## Elasticsearch cluster health is indicated in three parameters:
 
-• Red indicates that some or all primary shards are not ready to serve the requests.
-• Yellow indicates that all primary shards are allocated but some or all of the replicas have not been allocated. Normally, single node   clusters will have their health status as yellow as no other node is available for replication.
-• Green indicates that all shards and their replicas are well allocated and the cluster is fully operational.
+* Red indicates that some or all primary shards are not ready to serve the requests.
+* Yellow indicates that all primary shards are allocated but some or all of the replicas have not been allocated. Normally, single node   clusters will have their health status as yellow as no other node is available for replication.
+* Green indicates that all shards and their replicas are well allocated and the cluster is fully operational.
