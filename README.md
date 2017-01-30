@@ -24,12 +24,16 @@ Pre-requisites :
 Ansible control machine with python boto library installed for using the AWS environment.
 Setup the ACCESS_KEY and SCERET_KEY for aws iam user as a "environment variable".
 
-export AWS_ACCESS_KEY=' '
+```bash
+export AWS_ACCESS_KEY=' ' 
 export AWS_SECRET_KEY_ID=' '
+```
 
-you need to start the ssh-agent to perform the remote operations on EC2 instances,
+you need to start the ssh-agent to perform the remote operations on EC2 instances.
 
+```bash
 ssh-agent bash
+```
 
 Usage :
 
