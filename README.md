@@ -38,7 +38,7 @@ ssh-agent bash
 # Usage 
 
 1. Clone this repository
-2. The shell script with the name elkstack should now be there in the present directory.
+2. The shell script with the name ``elkstack`` should now be there in the present directory.
 3. Just execute the script and it should start building up the stack over EC2 instance in the form of contanierized apps.
 4. Once finished then access Kibana UI by hitting http://<ec2 instance IP>:5601 with a web browser.  
 5. we have already Injected wordpress application syslog into the logstash which has been indexed and ready to be used by Kibana UI.
